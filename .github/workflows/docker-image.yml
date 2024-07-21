@@ -30,50 +30,6 @@ jobs:
       - name: Build with Maven
         run: mvn clean package
 
-      - name: Get current version
-        id: get_version
-        run: echo "CURRENT_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)" >> $GITHUB_ENV
-
-      - name: Calculate new version
-        id: new_version
-        run: |
-          echo "Current version: ${{ env.CURRENT_VERSION }}"
-          if [[ "${{ env.CURRENT_VERSION }}" =~ ^([0-9]+)\.([0-9]+)\.([0-9]+)$ ]]; then
-            major=${BASH_REMATCH[1]}
-            minor=${BASH_REMATCH[2]}
-            patch=${BASH_REMATCH[3]}
-            new_patch=$((patch + 1))
-            NEW_VERSION="$major.$minor.$new_patch"
-            echo "New version: $NEW_VERSION"
-            echo "NEW_VERSION=$NEW_VERSION" >> $GITHUB_ENV
-          else
-            echo "Current version is not a valid semver version"
-            exit 1
-          fi
-
-      - name: Check if tag exists
-        id: check_tag_exists
-        run: |
-          if git rev-parse "v${{ env.NEW_VERSION }}" >/dev/null 2>&1; then
-            echo "TAG_EXISTS=true" >> $GITHUB_ENV
-          else
-            echo "TAG_EXISTS=false" >> $GITHUB_ENV
-          fi
-
-      - name: Recalculate new version if tag exists
-        if: env.TAG_EXISTS == 'true'
-        run: |
-          major=$(echo ${{ env.NEW_VERSION }} | cut -d. -f1)
-          minor=$(echo ${{ env.NEW_VERSION }} | cut -d. -f2)
-          patch=$(echo ${{ env.NEW_VERSION }} | cut -d. -f3)
-          new_patch=$((patch + 1))
-          while git rev-parse "v$major.$minor.$new_patch" >/dev/null 2>&1; do
-            new_patch=$((new_patch + 1))
-          done
-          NEW_VERSION="$major.$minor.$new_patch"
-          echo "New recalculated version: $NEW_VERSION"
-          echo "NEW_VERSION=$NEW_VERSION" >> $GITHUB_ENV
-
       - name: Configure Git
         run: |
           git config --global user.email "info@scgis.org"
@@ -81,17 +37,17 @@ jobs:
 
       - name: Create Git tag
         run: |
-          git tag -a "v${{ env.NEW_VERSION }}" -m "Release version ${{ env.NEW_VERSION }}"
-          git push origin "v${{ env.NEW_VERSION }}"
+          git tag -a "v1.2.3" -m "Release version 1.2.3" || echo "Tag already exists"
+          git push origin "v1.2.3" || echo "Tag already pushed"
 
       - name: Create GitHub Release
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: "v${{ env.NEW_VERSION }}"
-          release_name: "Release ${{ env.NEW_VERSION }}"
-          body: "Release of version ${{ env.NEW_VERSION }}"
+          tag_name: "v1.2.3"
+          release_name: "Release 1.2.3"
+          body: "Release of version 1.2.3"
           draft: false
           prerelease: false
 
@@ -102,7 +58,7 @@ jobs:
           password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
 
       - name: Build Docker image
-        run: docker build . -t ${{ secrets.DOCKER_HUB_USERNAME }}/springboot-demo:${{ env.NEW_VERSION }}
+        run: docker build . -t ${{ secrets.DOCKER_HUB_USERNAME }}/springboot-demo:1.2.3
 
       - name: Push Docker image
-        run: docker push ${{ secrets.DOCKER_HUB_USERNAME }}/springboot-demo:${{ env.NEW_VERSION }}
+        run: docker push ${{ secrets.DOCKER_HUB_USERNAME }}/springboot-demo:1.2.3
