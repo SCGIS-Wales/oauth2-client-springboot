@@ -1,4 +1,4 @@
-name: Build and Push Docker Image
+name: Build, Tag, and Push Docker Image
 
 on:
   push:
@@ -30,6 +30,45 @@ jobs:
       - name: Build with Maven
         run: mvn clean package
 
+      - name: Get current version
+        id: get_version
+        run: echo "CURRENT_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)" >> $GITHUB_ENV
+
+      - name: Calculate new version
+        id: new_version
+        run: |
+          echo "Current version: ${{ env.CURRENT_VERSION }}"
+          if [[ "${{ env.CURRENT_VERSION }}" =~ ^([0-9]+)\.([0-9]+)\.([0-9]+)$ ]]; then
+            major=${BASH_REMATCH[1]}
+            minor=${BASH_REMATCH[2]}
+            patch=${BASH_REMATCH[3]}
+            new_patch=$((patch + 1))
+            NEW_VERSION="$major.$minor.$new_patch"
+            echo "New version: $NEW_VERSION"
+            echo "NEW_VERSION=$NEW_VERSION" >> $GITHUB_ENV
+          else
+            echo "Current version is not a valid semver version"
+            exit 1
+          fi
+
+      - name: Create Git tag
+        run: |
+          git config --global user.email "you@example.com"
+          git config --global user.name "Your Name"
+          git tag -a "v${{ env.NEW_VERSION }}" -m "Release version ${{ env.NEW_VERSION }}"
+          git push origin "v${{ env.NEW_VERSION }}"
+
+      - name: Create GitHub Release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: "v${{ env.NEW_VERSION }}"
+          release_name: "Release ${{ env.NEW_VERSION }}"
+          body: "Release of version ${{ env.NEW_VERSION }}"
+          draft: false
+          prerelease: false
+
       - name: Log in to Docker Hub
         uses: docker/login-action@v2
         with:
@@ -37,8 +76,7 @@ jobs:
           password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
 
       - name: Build Docker image
-        run: docker build . -t ${{ secrets.DOCKER_HUB_USERNAME }}/springboot-demo:latest
+        run: docker build . -t ${{ secrets.DOCKER_HUB_USERNAME }}/springboot-demo:${{ env.NEW_VERSION }}
 
       - name: Push Docker image
-        run: docker push ${{ secrets.DOCKER_HUB_USERNAME }}/springboot-demo:latest
-
+        run: docker push ${{ secrets.DOCKER_HUB_USERNAME }}/springboot-demo:${{ env.NEW_VERSION }}
