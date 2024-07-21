@@ -30,6 +30,7 @@ The application uses the following environment variables:
 - **OAUTH2_USERNAME**: Username for OAuth2 authentication.
 - **OAUTH2_PASSWORD**: Password for OAuth2 authentication.
 - **OAUTH2_URL**: URL of the OAuth2 authentication service.
+- **OAUTH_RETRY_INTERVAL**: Interval for the AUthService to retry backend calls (in seconds)
 
 
 ## Prerequisites
