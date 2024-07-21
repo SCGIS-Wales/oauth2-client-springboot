@@ -52,13 +52,11 @@ jobs:
           fi
 
       - name: Check if tag exists
-        id: tag_exists
+        id: check_tag_exists
         run: |
           if git rev-parse "v${{ env.NEW_VERSION }}" >/dev/null 2>&1; then
-            echo "Tag v${{ env.NEW_VERSION }} already exists"
             echo "TAG_EXISTS=true" >> $GITHUB_ENV
           else
-            echo "Tag v${{ env.NEW_VERSION }} does not exist"
             echo "TAG_EXISTS=false" >> $GITHUB_ENV
 
       - name: Calculate new version if tag exists
@@ -82,16 +80,16 @@ jobs:
       - name: Create Git tag
         if: env.TAG_EXISTS == 'false'
         run: |
-          git config --global user.email "you@example.com"
-          git config --global user.name "Your Name"
+          git config --global user.email "info@scgis.org"
+          git config --global user.name "SCGIS Wales"
           git tag -a "v${{ env.NEW_VERSION }}" -m "Release version ${{ env.NEW_VERSION }}"
           git push origin "v${{ env.NEW_VERSION }}"
 
       - name: Create Git tag after recalculation
         if: env.TAG_EXISTS == 'true'
         run: |
-          git config --global user.email "you@example.com"
-          git config --global user.name "Your Name"
+          git config --global user.email "info@scgis.org"
+          git config --global user.name "SCGIS Wales"
           git tag -a "v${{ env.NEW_VERSION }}" -m "Release version ${{ env.NEW_VERSION }}"
           git push origin "v${{ env.NEW_VERSION }}"
 
