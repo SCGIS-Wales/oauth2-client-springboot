@@ -4,13 +4,19 @@ FROM openjdk:17-jdk-slim
 # Set the working directory inside the container
 WORKDIR /app
 
-# Install required packages
-RUN apt-get update && apt-get install -y \
+# Install required packages and update vulnerable packages
+RUN apt-get update && \
+    apt-get install -y \
     bash \
     vim \
     jq \
     wget \
     procps \
+    && apt-get install -y --only-upgrade \
+    openssl \
+    pcre2 \
+    libtasn1-6 \
+    zlib1g \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy the packaged jar file into the container
