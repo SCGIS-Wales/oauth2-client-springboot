@@ -14,7 +14,7 @@ RUN apt-get update && \
     procps \
     && apt-get install -y --only-upgrade \
     openssl \
-    pcre2 \
+    libpcre2-8-0 \
     libtasn1-6 \
     zlib1g \
     && rm -rf /var/lib/apt/lists/*
@@ -31,4 +31,3 @@ RUN chmod +x start.sh
 
 # Set the entry point to the start.sh script
 ENTRYPOINT ["./start.sh"]
-
