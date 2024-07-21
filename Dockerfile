@@ -31,3 +31,4 @@ RUN chmod +x start.sh
 
 # Set the entry point to the start.sh script
 ENTRYPOINT ["./start.sh"]
+
