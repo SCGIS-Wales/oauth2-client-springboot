@@ -8,10 +8,10 @@ import org.springframework.http.*;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.net.UnknownHostException;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
@@ -67,10 +67,7 @@ public class AuthController {
             ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.POST, request, String.class);
             meterRegistry.counter("response.status.code", "status", String.valueOf(response.getStatusCodeValue())).increment();
             return response;
-        } catch (UnknownHostException e) {
-            logger.error("DNS resolution failed: {}", e.getMessage());
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "DNS resolution failed", e);
-        } catch (Exception e) {
+        } catch (RestClientException e) {
             logger.error("Error occurred: {}", e.getMessage());
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "An error occurred", e);
         }
