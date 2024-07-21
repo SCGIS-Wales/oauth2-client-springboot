@@ -60,37 +60,27 @@ jobs:
             echo "TAG_EXISTS=false" >> $GITHUB_ENV
           fi
 
-      - name: Calculate new version if tag exists
+      - name: Recalculate new version if tag exists
         if: env.TAG_EXISTS == 'true'
-        id: recalculate_version
         run: |
-          echo "Current version: ${{ env.CURRENT_VERSION }}"
-          if [[ "${{ env.CURRENT_VERSION }}" =~ ^([0-9]+)\.([0-9]+)\.([0-9]+)$ ]]; then
-            major=${BASH_REMATCH[1]}
-            minor=${BASH_REMATCH[2]}
-            patch=${BASH_REMATCH[3]}
-            new_patch=$((patch + 2))
-            NEW_VERSION="$major.$minor.$new_patch"
-            echo "New recalculated version: $NEW_VERSION"
-            echo "NEW_VERSION=$NEW_VERSION" >> $GITHUB_ENV
-          else
-            echo "Current version is not a valid semver version"
-            exit 1
-          fi
+          major=$(echo ${{ env.NEW_VERSION }} | cut -d. -f1)
+          minor=$(echo ${{ env.NEW_VERSION }} | cut -d. -f2)
+          patch=$(echo ${{ env.NEW_VERSION }} | cut -d. -f3)
+          new_patch=$((patch + 1))
+          while git rev-parse "v$major.$minor.$new_patch" >/dev/null 2>&1; do
+            new_patch=$((new_patch + 1))
+          done
+          NEW_VERSION="$major.$minor.$new_patch"
+          echo "New recalculated version: $NEW_VERSION"
+          echo "NEW_VERSION=$NEW_VERSION" >> $GITHUB_ENV
+
+      - name: Configure Git
+        run: |
+          git config --global user.email "info@scgis.org"
+          git config --global user.name "SCGIS Wales"
 
       - name: Create Git tag
-        if: env.TAG_EXISTS == 'false'
         run: |
-          git config --global user.email "info@scgis.org"
-          git config --global user.name "SCGIS Wales"
-          git tag -a "v${{ env.NEW_VERSION }}" -m "Release version ${{ env.NEW_VERSION }}"
-          git push origin "v${{ env.NEW_VERSION }}"
-
-      - name: Create Git tag after recalculation
-        if: env.TAG_EXISTS == 'true'
-        run: |
-          git config --global user.email "info@scgis.org"
-          git config --global user.name "SCGIS Wales"
           git tag -a "v${{ env.NEW_VERSION }}" -m "Release version ${{ env.NEW_VERSION }}"
           git push origin "v${{ env.NEW_VERSION }}"
 
