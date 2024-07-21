@@ -5,23 +5,24 @@ This is a Spring Boot demo application designed to interact with an OAuth2 authe
 # Overview
 
 # Features
-#  OAuth2 Authentication:
+
+##  OAuth2 Authentication:
 
 The application retrieves an OAuth2 token from a specified authentication service using credentials provided via environment variables.
 
-#  Custom Metrics:
+##  Custom Metrics:
 
 Custom metrics are integrated using Micrometer and Prometheus for monitoring application performance and status.
 
-#  Environment Configuration:
+##  Environment Configuration:
 
 Environment variables are used to configure client ID, API key, username, password, and the authentication URL, ensuring that sensitive information is not hardcoded.
 
-# Containerization with Docker:
+## Containerization with Docker:
 
 The application is containerized using Docker, making it easy to deploy and run in different environments.
 
-# Usage
+## Usage
 Environment Variables:
 
 The application uses the following environment variables:
@@ -31,6 +32,7 @@ The application uses the following environment variables:
 **OAUTH2_USERNAME**: Username for OAuth2 authentication.
 **OAUTH2_PASSWORD**: Password for OAuth2 authentication.
 **OAUTH2_URL**: URL of the OAuth2 authentication service.
+
 
 ## Prerequisites
 
