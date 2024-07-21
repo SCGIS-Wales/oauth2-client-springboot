@@ -17,3 +17,11 @@ logging:
     com.example.demo: DEBUG
     org.springframework.web: DEBUG
     org.springframework.http: DEBUG
+
+# OAuth2 settings
+OAUTH2_CLIENT_ID: ${OAUTH2_CLIENT_ID}
+OAUTH2_API_KEY: ${OAUTH2_API_KEY}
+OAUTH2_USERNAME: ${OAUTH2_USERNAME}
+OAUTH2_PASSWORD: ${OAUTH2_PASSWORD}
+OAUTH2_URL: ${OAUTH2_URL}
+OAUTH_RETRY_INTERVAL: ${OAUTH_RETRY_INTERVAL:60}  # Default to 60 seconds if not set

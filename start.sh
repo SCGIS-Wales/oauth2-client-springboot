@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Check if all required environment variables are set
-REQUIRED_VARS=("OAUTH2_CLIENT_ID" "OAUTH2_API_KEY" "OAUTH2_USERNAME" "OAUTH2_PASSWORD" "OAUTH2_URL")
+REQUIRED_VARS=("OAUTH2_CLIENT_ID" "OAUTH2_API_KEY" "OAUTH2_USERNAME" "OAUTH2_PASSWORD" "OAUTH2_URL" "OAUTH_RETRY_INTERVAL")
 
 for VAR in "${REQUIRED_VARS[@]}"; do
   if [ -z "${!VAR}" ]; then

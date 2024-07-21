@@ -6,6 +6,7 @@ WORKDIR /app
 
 # Install required packages and update vulnerable packages
 RUN apt-get update && \
+    apt-get dist-upgrade -y && \
     apt-get install -y \
     bash \
     vim \
