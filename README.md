@@ -2,8 +2,6 @@
 
 This is a Spring Boot demo application designed to interact with an OAuth2 authentication service. The application demonstrates the use of environment variables for configuration, custom metrics for monitoring, and containerization using Docker. It is integrated with GitHub Actions for CI/CD, which includes building, versioning, and deploying Docker images to Docker Hub.
 
-# Overview
-
 # Features
 
 ##  OAuth2 Authentication:
@@ -27,11 +25,12 @@ Environment Variables:
 
 The application uses the following environment variables:
 
-**OAUTH2_CLIENT_ID**: Client ID for OAuth2 authentication.
-**OAUTH2_API_KEY**: API key for OAuth2 authentication.
-**OAUTH2_USERNAME**: Username for OAuth2 authentication.
-**OAUTH2_PASSWORD**: Password for OAuth2 authentication.
-**OAUTH2_URL**: URL of the OAuth2 authentication service.
+- **OAUTH2_CLIENT_ID**: Client ID for OAuth2 authentication.
+- **OAUTH2_API_KEY**: API key for OAuth2 authentication.
+- **OAUTH2_USERNAME**: Username for OAuth2 authentication.
+- **OAUTH2_PASSWORD**: Password for OAuth2 authentication.
+- **OAUTH2_URL**: URL of the OAuth2 authentication service.
+- **OAUTH_RETRY_INTERVAL**: Interval for the AUthService to retry backend calls (in seconds)
 
 
 ## Prerequisites
