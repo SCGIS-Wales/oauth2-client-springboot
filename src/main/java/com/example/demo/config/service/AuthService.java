@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.server.ResponseStatusException;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.Base64;
 
@@ -55,16 +54,13 @@ public class AuthService {
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
         headers.set("Authorization", "Basic " + auth);
 
-        String body = UriComponentsBuilder.newInstance()
-                .queryParam("grant_type", "password")
-                .queryParam("username", username)
-                .queryParam("password", password)
-                .queryParam("client_id", clientId)
-                .build()
-                .toUriString()
-                .substring(1); // Remove the leading '?' from the generated string
+        StringBuilder body = new StringBuilder();
+        body.append("grant_type=password");
+        body.append("&username=").append(username);
+        body.append("&password=").append(password);
+        body.append("&client_id=").append(clientId);
 
-        HttpEntity<String> request = new HttpEntity<>(body, headers);
+        HttpEntity<String> request = new HttpEntity<>(body.toString(), headers);
 
         try {
             ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.POST, request, String.class);
