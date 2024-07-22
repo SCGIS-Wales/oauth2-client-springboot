@@ -60,6 +60,15 @@ The application uses the following environment variables:
 ## Running the Application
 
 Run the Docker container with the necessary environment variables:
-```bash
-docker run -e OAUTH2_CLIENT_ID='your_client_id' -e OAUTH2_API_KEY='your_api_key' -e OAUTH2_USERNAME='your_username' -e OAUTH2_PASSWORD='your_password' -e OAUTH2_URL='https://api.organization.org/oauth2/token' -p 8080:8080 springboot-demo
 
+```bash
+docker run -e OAUTH2_CLIENT_ID=<your-client-id> \
+           -e OAUTH2_API_KEY=<your-api-key> \
+           -e OAUTH2_USERNAME=<your-username> \
+           -e OAUTH2_PASSWORD=<your-password> \
+           -e OAUTH2_URL=<your-oauth-url> \
+           -e OAUTH_RETRY_INTERVAL=<your-retry-interval> \
+           -e SSL_CERT_FILE=/etc/ssl/certs/ca-certificates.crt \
+           -v /etc/ssl/certs/ca-certificates.crt \
+           <your-docker-image>
+```
