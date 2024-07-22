@@ -12,6 +12,7 @@ RUN apt-get update && \
     vim \
     jq \
     wget \
+    curl \
     procps \
     && apt-get install -y --only-upgrade \
     openssl \
