@@ -37,8 +37,8 @@ jobs:
 
       - name: Create Git tag
         run: |
-          git tag -a "v1.2.4" -m "Release version 1.2.4" || echo "Tag already exists"
-          git push origin "v1.2.4" || echo "Tag already pushed"
+          git tag -a "v1.2.5" -m "Release version 1.2.5" || echo "Tag already exists"
+          git push origin "v1.2.5" || echo "Tag already pushed"
 
       - name: Install GitHub CLI
         run: |
@@ -48,7 +48,7 @@ jobs:
       - name: Check if GitHub release exists
         id: check_release
         run: |
-          if gh release view "v1.2.4"; then
+          if gh release view "v1.2.5"; then
             echo "RELEASE_EXISTS=true" >> $GITHUB_ENV
           else
             echo "RELEASE_EXISTS=false" >> $GITHUB_ENV
@@ -60,9 +60,9 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: "v1.2.4"
-          release_name: "Release 1.2.4"
-          body: "Release of version 1.2.4"
+          tag_name: "v1.2.5"
+          release_name: "Release 1.2.5"
+          body: "Release of version 1.2.5"
           draft: false
           prerelease: false
 
@@ -73,7 +73,7 @@ jobs:
           password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
 
       - name: Build Docker image
-        run: docker build . -t ${{ secrets.DOCKER_HUB_USERNAME }}/springboot-demo:1.2.4
+        run: docker build . -t ${{ secrets.DOCKER_HUB_USERNAME }}/springboot-demo:1.2.5
 
       - name: Push Docker image
-        run: docker push ${{ secrets.DOCKER_HUB_USERNAME }}/springboot-demo:1.2.4
+        run: docker push ${{ secrets.DOCKER_HUB_USERNAME }}/springboot-demo:1.2.5

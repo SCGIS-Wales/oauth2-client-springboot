@@ -14,11 +14,13 @@ RUN yum update -y && \
     wget \
     procps \
     openssl \
+    ca-certificates \
     pcre2 \
     libtasn1 \
     tar \
     zlib && \
-    yum clean all
+    yum clean all && \
+    mkdir -p /etc/pki/ca-trust/source/anchors/
 
 # Copy the packaged jar file into the container
 ARG JAR_FILE=target/demo-1.0.0.jar
