@@ -68,7 +68,5 @@ docker run -e OAUTH2_CLIENT_ID=<your-client-id> \
            -e OAUTH2_PASSWORD=<your-password> \
            -e OAUTH2_URL=<your-oauth-url> \
            -e OAUTH_RETRY_INTERVAL=<your-retry-interval> \
-           -e SSL_CERT_FILE=/etc/ssl/certs/ca-certificates.crt \
-           -v /etc/ssl/certs/ca-certificates.crt \
            <your-docker-image>
 ```
