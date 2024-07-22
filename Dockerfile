@@ -16,6 +16,7 @@ RUN yum update -y && \
     openssl \
     pcre2 \
     libtasn1 \
+    tar \
     zlib && \
     yum clean all
 
