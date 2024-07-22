@@ -1,25 +1,23 @@
-# Use the official OpenJDK 17 image from the Docker Hub
-FROM openjdk:17-jdk-slim
+# Use the official Amazon Corretto 17 image from the Docker Hub
+FROM amazoncorretto:17
 
 # Set the working directory inside the container
 WORKDIR /app
 
-# Install required packages and update vulnerable packages
-RUN apt-get update && \
-    apt-get dist-upgrade -y && \
-    apt-get install -y \
+# Update the package lists, upgrade installed packages, and install required packages
+RUN yum update -y && \
+    yum install -y \
     bash \
     vim \
     jq \
-    wget \
     curl \
+    wget \
     procps \
-    && apt-get install -y --only-upgrade \
     openssl \
-    libpcre2-8-0 \
-    libtasn1-6 \
-    zlib1g \
-    && rm -rf /var/lib/apt/lists/*
+    pcre2 \
+    libtasn1 \
+    zlib && \
+    yum clean all
 
 # Copy the packaged jar file into the container
 ARG JAR_FILE=target/demo-1.0.0.jar
