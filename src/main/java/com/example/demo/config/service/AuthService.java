@@ -10,10 +10,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.Base64;
-import java.util.HashMap;
-import java.util.Map;
 
 @Service
 public class AuthService {
@@ -56,13 +55,16 @@ public class AuthService {
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
         headers.set("Authorization", "Basic " + auth);
 
-        Map<String, String> params = new HashMap<>();
-        params.put("grant_type", "password");
-        params.put("username", username);
-        params.put("password", password);
-        params.put("client_id", clientId);
+        String body = UriComponentsBuilder.newInstance()
+                .queryParam("grant_type", "password")
+                .queryParam("username", username)
+                .queryParam("password", password)
+                .queryParam("client_id", clientId)
+                .build()
+                .toUriString()
+                .substring(1); // Remove the leading '?' from the generated string
 
-        HttpEntity<Map<String, String>> request = new HttpEntity<>(params, headers);
+        HttpEntity<String> request = new HttpEntity<>(body, headers);
 
         try {
             ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.POST, request, String.class);
