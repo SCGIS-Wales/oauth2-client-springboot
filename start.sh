@@ -10,5 +10,12 @@ for VAR in "${REQUIRED_VARS[@]}"; do
   fi
 done
 
-# If all variables are set, run the Java application
-java -jar app.jar
+# Set the trust store path and password explicitly
+TRUST_STORE_PATH="${JAVA_HOME}/lib/security/cacerts"
+TRUST_STORE_PASSWORD="changeit"
+
+# If all variables are set, run the Java application with SSL debug logging and explicit trust store settings
+/usr/lib/jvm/java-17-amazon-corretto/bin/java -Djavax.net.debug=ssl,handshake \
+     -Djavax.net.ssl.trustStore="${TRUST_STORE_PATH}" \
+     -Djavax.net.ssl.trustStorePassword="${TRUST_STORE_PASSWORD}" \
+     -jar app.jar
