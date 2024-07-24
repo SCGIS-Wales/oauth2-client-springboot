@@ -18,4 +18,5 @@ TRUST_STORE_PASSWORD="changeit"
 /usr/lib/jvm/java-17-amazon-corretto/bin/java -Djavax.net.debug=ssl,handshake \
      -Djavax.net.ssl.trustStore="${TRUST_STORE_PATH}" \
      -Djavax.net.ssl.trustStorePassword="${TRUST_STORE_PASSWORD}" \
+     -Dhttps.protocols=TLSv1.2 \
      -jar app.jar
